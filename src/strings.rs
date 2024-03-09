@@ -1,13 +1,14 @@
 use crate::digit_sequence::{internal_create_digit_sequence, DigitSequence};
 use crate::result::{Error, Result};
+use std::str::FromStr;
 
-impl TryFrom<&str> for DigitSequence {
-    type Error = Error;
+impl FromStr for DigitSequence {
+    type Err = Error;
 
-    fn try_from(value: &str) -> Result<Self> {
+    fn from_str(s: &str) -> Result<Self> {
         let mut digits: Vec<u8> = Vec::new();
 
-        for current_char in value.chars() {
+        for current_char in s.chars() {
             match current_char.to_digit(10) {
                 Some(digit) => digits.push(digit as u8),
                 None => return Err(Error::NonDigitChar(current_char)),
@@ -27,13 +28,13 @@ mod tests {
     speculate! {
         describe "Converting &str to DigitSequence" {
             fn test_ok(source: &str, expected: &[u8]) {
-                let digit_sequence: DigitSequence = source.try_into().unwrap();
+                let digit_sequence: DigitSequence = source.parse().unwrap();
 
                 eq!(digit_sequence, expected);
             }
 
             fn test_err(source: &str, expected_error: Error) {
-                let result: Result<DigitSequence> = source.try_into();
+                let result: Result<DigitSequence> = source.parse();
 
                 eq!(result, Err(expected_error));
             }

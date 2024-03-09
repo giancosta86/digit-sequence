@@ -50,7 +50,7 @@ speculate! {
 
         describe "from a valid string literal" {
             it "should work" {
-                let sequence = DigitSequence::try_from("01294860").unwrap();
+                let sequence: DigitSequence = "01294860".parse().unwrap();
 
                 eq!(sequence, [0, 1, 2, 9, 4, 8, 6, 0]);
             }

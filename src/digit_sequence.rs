@@ -43,7 +43,7 @@ use std::fmt::Display;
 ///   use digit_sequence::{Result, DigitSequence};
 ///
 ///   # fn main() -> Result<()> {
-///   let sequence: DigitSequence = "09240".try_into()?;
+///   let sequence: DigitSequence = "09240".parse()?;
 ///
 ///   assert_eq!(sequence, [0, 9, 2, 4, 0]);
 ///   # Ok(())
