@@ -1,7 +1,7 @@
 [package]
 
 name = "digit-sequence"
-version = "0.2.0"
+version = "0.2.1"
 
 authors = ["Gianluca Costa <gianluca@gianlucacosta.info>"]
 edition = "2021"

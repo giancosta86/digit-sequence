@@ -4,7 +4,7 @@ use std::fmt::Display;
 pub type Result<T> = std::result::Result<T, Error>;
 
 ///Custom error scenarios related to this [crate].
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum Error {
     ///When a character does not represent a 0-9 digit.
     NonDigitChar(char),
