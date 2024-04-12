@@ -1,18 +1,18 @@
 use std::fmt::Display;
 
-///Custom version of [Result](std::result::Result), based on this crate's [Error].
+/// Custom version of [Result](std::result::Result), based on this crate's [Error].
 pub type Result<T> = std::result::Result<T, Error>;
 
-///Custom error scenarios related to this [crate].
+/// Custom error scenarios related to this [crate].
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum Error {
-    ///When a character does not represent a 0-9 digit.
+    /// When a character does not represent a 0-9 digit.
     NonDigitChar(char),
 
-    ///When a number does not represent a 0-9 digit.
+    /// When a number does not represent a 0-9 digit.
     NonDigitNumber(u128),
 
-    ///When trying conversion from a negative number.
+    /// When trying conversion from a negative number.
     NegativeNumber(i128),
 }
 

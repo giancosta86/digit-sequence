@@ -154,7 +154,7 @@ pub fn internal_create_digit_sequence(digits: Vec<u8>) -> DigitSequence {
 }
 
 impl DigitSequence {
-    ///Convenience method for iterating over references to the digits.
+    /// Convenience method for iterating over references to the digits.
     pub fn iter(&self) -> std::slice::Iter<u8> {
         self.0.iter()
     }
