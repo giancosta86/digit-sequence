@@ -1,14 +1,14 @@
-use crate::digit_sequence::{internal_create_digit_sequence, DigitSequence};
-use crate::result::{Error, Result};
+use crate::digit_sequence::internal_create_digit_sequence;
+use crate::{CrateError, CrateResult, DigitSequence};
 
 macro_rules! impl_try_from_signed {
     ($type: ty) => {
         impl TryFrom<$type> for DigitSequence {
-            type Error = Error;
+            type Error = CrateError;
 
-            fn try_from(value: $type) -> Result<Self> {
+            fn try_from(value: $type) -> CrateResult<Self> {
                 if value < 0 {
-                    return Err(Error::NegativeNumber(value as i128));
+                    return Err(CrateError::NegativeNumber(value as i128));
                 }
 
                 Ok(convert_from_positive!(value))
@@ -55,12 +55,14 @@ impl_try_from_signed!(i64);
 impl_try_from_signed!(i32);
 impl_try_from_signed!(i16);
 impl_try_from_signed!(i8);
+impl_try_from_signed!(isize);
 
 impl_from_unsigned!(u128);
 impl_from_unsigned!(u64);
 impl_from_unsigned!(u32);
 impl_from_unsigned!(u16);
 impl_from_unsigned!(u8);
+impl_from_unsigned!(usize);
 
 #[cfg(test)]
 mod tests {
@@ -81,9 +83,9 @@ mod tests {
 
             describe "when converting a negative number" {
                 it "should return Err" {
-                    let result: Result<DigitSequence> = (-4).try_into();
+                    let result: CrateResult<DigitSequence> = (-4).try_into();
 
-                    eq!(result, Err(Error::NegativeNumber(-4)));
+                    eq!(result, Err(CrateError::NegativeNumber(-4)));
                 }
             }
 
@@ -112,6 +114,10 @@ mod tests {
 
                 it "should convert a u128" {
                     test_case(107u128, &[1, 0, 7])
+                }
+
+                it "should convert a usize" {
+                    test_case(107usize, &[1, 0, 7])
                 }
             }
 
@@ -142,6 +148,10 @@ mod tests {
 
                 it "should convert a i128" {
                     test_case(107i128, &[1, 0, 7])
+                }
+
+                it "should convert a isize" {
+                    test_case(107isize, &[1, 0, 7])
                 }
             }
         }

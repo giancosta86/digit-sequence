@@ -1,17 +1,17 @@
-use crate::digit_sequence::{internal_create_digit_sequence, DigitSequence};
-use crate::result::{Error, Result};
+use crate::digit_sequence::internal_create_digit_sequence;
+use crate::{CrateError, CrateResult, DigitSequence};
 use std::str::FromStr;
 
 impl FromStr for DigitSequence {
-    type Err = Error;
+    type Err = CrateError;
 
-    fn from_str(s: &str) -> Result<Self> {
+    fn from_str(s: &str) -> CrateResult<Self> {
         let mut digits: Vec<u8> = Vec::new();
 
         for current_char in s.chars() {
             match current_char.to_digit(10) {
                 Some(digit) => digits.push(digit as u8),
-                None => return Err(Error::NonDigitChar(current_char)),
+                None => return Err(CrateError::NonDigitChar(current_char)),
             }
         }
 
@@ -33,8 +33,8 @@ mod tests {
                 eq!(digit_sequence, expected);
             }
 
-            fn test_err(source: &str, expected_error: Error) {
-                let result: Result<DigitSequence> = source.parse();
+            fn test_err(source: &str, expected_error: CrateError) {
+                let result: CrateResult<DigitSequence> = source.parse();
 
                 eq!(result, Err(expected_error));
             }
@@ -77,19 +77,19 @@ mod tests {
 
             describe "when passing a negative number string" {
                 it "should return Err" {
-                    test_err("-89", Error::NonDigitChar('-'));
+                    test_err("-89", CrateError::NonDigitChar('-'));
                 }
             }
 
             describe "when passing a non-number string" {
                 it "should return Err" {
-                    test_err("<NOT A NUMBER>", Error::NonDigitChar('<'));
+                    test_err("<NOT A NUMBER>", CrateError::NonDigitChar('<'));
                 }
             }
 
             describe "when passing a partially valid string" {
                 it "should return Err" {
-                    test_err("90xyz", Error::NonDigitChar('x'));
+                    test_err("90xyz", CrateError::NonDigitChar('x'));
                 }
             }
         }

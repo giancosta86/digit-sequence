@@ -1,4 +1,4 @@
-use crate::result::{Error, Result};
+use crate::{CrateError, CrateResult};
 use std::fmt::Display;
 
 /// Immutable sequence of u8 digits.
@@ -12,9 +12,9 @@ use std::fmt::Display;
 /// * from any **unsigned** number:
 ///
 ///   ```
-///   use digit_sequence::{Result, DigitSequence};
+///   use digit_sequence::{CrateResult, DigitSequence};
 ///
-///   # fn main() -> Result<()> {
+///   # fn main() -> CrateResult<()> {
 ///   let sequence: DigitSequence = 985u32.into();
 ///
 ///   assert_eq!(sequence, [9, 8, 5]);
@@ -27,9 +27,9 @@ use std::fmt::Display;
 /// * from any **signed** number - which fails if the number is negative:
 ///
 ///   ```
-///   use digit_sequence::{Result, DigitSequence};
+///   use digit_sequence::{CrateResult, DigitSequence};
 ///
-///   # fn main() -> Result<()> {
+///   # fn main() -> CrateResult<()> {
 ///   let sequence: DigitSequence = 3791i32.try_into()?;
 ///
 ///   assert_eq!(sequence, [3, 7, 9, 1]);
@@ -40,9 +40,9 @@ use std::fmt::Display;
 /// * from &[str] - which fails in case of non-digit (radix 10) characters:
 ///  
 ///   ```
-///   use digit_sequence::{Result, DigitSequence};
+///   use digit_sequence::{CrateResult, DigitSequence};
 ///
-///   # fn main() -> Result<()> {
+///   # fn main() -> CrateResult<()> {
 ///   let sequence: DigitSequence = "09240".parse()?;
 ///
 ///   assert_eq!(sequence, [0, 9, 2, 4, 0]);
@@ -53,13 +53,31 @@ use std::fmt::Display;
 /// * from a &[[u8]] - which fails if the numbers are not 0-9 digits:
 ///
 ///   ```
-///   use digit_sequence::{Result, DigitSequence};
+///   use digit_sequence::{CrateResult, DigitSequence};
 ///
-///   # fn main() -> Result<()> {
+///   # fn main() -> CrateResult<()> {
 ///   let source = [0, 9, 2, 4, 0];
 ///   let sequence: DigitSequence = (&source).try_into()?;
 ///
 ///   assert_eq!(sequence, source);
+///   # Ok(())
+///   # }
+///   ```
+///
+/// * to any **unsigned** number - which can fail with [CrateError::Overflow]:
+///
+///   ```
+///   use digit_sequence::{CrateResult, CrateError, DigitSequence};
+///
+///   # fn main() -> CrateResult<()> {
+///   let in_range_sequence: DigitSequence = "90".parse()?;
+///   let number: u128 = in_range_sequence.try_into()?;
+///   assert_eq!(number, 90);
+///
+///   let overflowing_sequence: DigitSequence = "1".repeat(100).parse()?;
+///   let result: CrateResult<u128> = overflowing_sequence.try_into();
+///   assert_eq!(result, Err(CrateError::Overflow));
+///
 ///   # Ok(())
 ///   # }
 ///   ```
@@ -161,14 +179,14 @@ impl DigitSequence {
 }
 
 impl TryFrom<&[u8]> for DigitSequence {
-    type Error = Error;
+    type Error = CrateError;
 
-    fn try_from(digits: &[u8]) -> Result<Self> {
+    fn try_from(digits: &[u8]) -> CrateResult<Self> {
         let mut digits_vec = Vec::new();
 
         for &digit in digits.iter() {
             if digit >= 10 {
-                return Err(Error::NonDigitNumber(digit as u128));
+                return Err(CrateError::NonDigitNumber(digit as u128));
             }
 
             digits_vec.push(digit);
@@ -179,17 +197,17 @@ impl TryFrom<&[u8]> for DigitSequence {
 }
 
 impl<const N: usize> TryFrom<&[u8; N]> for DigitSequence {
-    type Error = Error;
+    type Error = CrateError;
 
-    fn try_from(digits: &[u8; N]) -> Result<Self> {
+    fn try_from(digits: &[u8; N]) -> CrateResult<Self> {
         Self::try_from(digits as &[u8])
     }
 }
 
 impl TryFrom<&Vec<u8>> for DigitSequence {
-    type Error = Error;
+    type Error = CrateError;
 
-    fn try_from(value: &Vec<u8>) -> Result<Self> {
+    fn try_from(value: &Vec<u8>) -> CrateResult<Self> {
         Self::try_from(value as &[u8])
     }
 }
@@ -291,7 +309,7 @@ mod tests {
                     it "should return Err" {
                         let result = DigitSequence::try_from(&[9, 3, 18]);
 
-                        eq!(result, Err(Error::NonDigitNumber(18)));
+                        eq!(result, Err(CrateError::NonDigitNumber(18)));
                     }
                 }
 

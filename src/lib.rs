@@ -4,7 +4,7 @@
 //!
 //! * different iteration strategies
 //!
-//! * a custom [Result] and a custom [Error]
+//! * a custom [CrateResult] and a custom [CrateError]
 //!
 //! * optional [serde] I/O
 
