@@ -1,7 +1,7 @@
 use crate::digit_sequence::{internal_create_digit_sequence, DigitSequence};
 use crate::result::{Error, Result};
 
-macro_rules! implement_try_from_signed {
+macro_rules! impl_try_from_signed {
     ($type: ty) => {
         impl TryFrom<$type> for DigitSequence {
             type Error = Error;
@@ -17,7 +17,7 @@ macro_rules! implement_try_from_signed {
     };
 }
 
-macro_rules! implement_from_unsigned {
+macro_rules! impl_from_unsigned {
     ($type: ty) => {
         impl From<$type> for DigitSequence {
             fn from(value: $type) -> DigitSequence {
@@ -50,17 +50,17 @@ macro_rules! convert_from_positive {
     }};
 }
 
-implement_try_from_signed!(i128);
-implement_try_from_signed!(i64);
-implement_try_from_signed!(i32);
-implement_try_from_signed!(i16);
-implement_try_from_signed!(i8);
+impl_try_from_signed!(i128);
+impl_try_from_signed!(i64);
+impl_try_from_signed!(i32);
+impl_try_from_signed!(i16);
+impl_try_from_signed!(i8);
 
-implement_from_unsigned!(u128);
-implement_from_unsigned!(u64);
-implement_from_unsigned!(u32);
-implement_from_unsigned!(u16);
-implement_from_unsigned!(u8);
+impl_from_unsigned!(u128);
+impl_from_unsigned!(u64);
+impl_from_unsigned!(u32);
+impl_from_unsigned!(u16);
+impl_from_unsigned!(u8);
 
 #[cfg(test)]
 mod tests {
