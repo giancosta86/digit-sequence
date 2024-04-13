@@ -82,6 +82,21 @@ use std::fmt::Display;
 ///   # }
 ///   ```
 ///
+///   Conversion from &DigitSequence is also supported:
+///
+///   ```
+///   use digit_sequence::{CrateResult, CrateError, DigitSequence};
+///
+///   # fn main() -> CrateResult<()> {
+///   let sequence: DigitSequence = "90".parse()?;
+///   let reference = &sequence;  
+///   let number: u128 = reference.try_into()?;
+///   assert_eq!(number, 90);
+///
+///   # Ok(())
+///   # }
+///   ```
+///
 /// # Usage
 ///
 /// This data structure implements [IntoIterator] and also provides the [iter](Self::iter) method - thus enabling standard iterations as well as the [Iterator] methods.

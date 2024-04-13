@@ -64,6 +64,12 @@ mod tests {
                     eq!(CrateError::NegativeNumber(-90).to_string(), "Cannot convert negative number: -90");
                 }
             }
+
+            describe "when an overflow occurs" {
+                it "should describe it" {
+                    eq!(CrateError::Overflow.to_string(), "Overflow");
+                }
+            }
         }
     }
 }
