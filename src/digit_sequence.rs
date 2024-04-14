@@ -5,7 +5,8 @@ use std::fmt::Display;
 ///
 /// # Creation
 ///
-/// A digit sequence can be created via *conversions* - which are not always *infallible*.
+/// A digit sequence is usually created via *conversions* - which are not always *infallible*; a [constructor](DigitSequence::new) is also provided to instantiate
+/// an empty sequence.
 ///
 /// ## Infallible conversions
 ///
@@ -187,6 +188,19 @@ pub fn internal_create_digit_sequence(digits: Vec<u8>) -> DigitSequence {
 }
 
 impl DigitSequence {
+    /// Creates an empty DigitSequence
+    ///
+    /// ```
+    /// use digit_sequence::DigitSequence;
+    ///
+    /// let sequence = DigitSequence::new();
+    ///
+    /// assert_eq!(sequence.iter().len(), 0);
+    /// ```
+    pub fn new() -> DigitSequence {
+        DigitSequence(vec![])
+    }
+
     /// Convenience method for iterating over references to the digits.
     pub fn iter(&self) -> std::slice::Iter<u8> {
         self.0.iter()
