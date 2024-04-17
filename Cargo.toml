@@ -1,5 +1,4 @@
 [package]
-
 name = "digit-sequence"
 version = "0.3.2"
 authors = ["Gianluca Costa <gianluca@gianlucacosta.info>"]
