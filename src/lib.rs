@@ -6,7 +6,7 @@
 //!
 //! * a custom [CrateResult] and a custom [CrateError]
 //!
-//! * optional [serde] I/O
+//! * optional `serde` I/O
 
 mod digit_sequence;
 mod integers;

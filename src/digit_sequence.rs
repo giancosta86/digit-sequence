@@ -178,7 +178,7 @@ use std::fmt::Display;
 ///  
 /// # Serialization
 ///
-/// When the `serde` feature is enabled for this crate, [Self] implements the [serde::Serialize] and [serde::Deserialize] traits.
+/// When the `serde` feature is enabled for this crate, [Self] implements the `serde::Serialize` and `serde::Deserialize` traits.
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct DigitSequence(Vec<u8>);
