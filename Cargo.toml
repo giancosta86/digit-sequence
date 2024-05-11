@@ -1,6 +1,6 @@
 [package]
 name = "digit-sequence"
-version = "0.3.2"
+version = "0.3.3"
 authors = ["Gianluca Costa <gianluca@gianlucacosta.info>"]
 edition = "2021"
 description = "Sequence of u8 digits"

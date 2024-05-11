@@ -205,6 +205,21 @@ impl DigitSequence {
     pub fn iter(&self) -> std::slice::Iter<u8> {
         self.0.iter()
     }
+
+    /// Tells whether the sequence is empty.
+    ///
+    /// ```
+    /// use digit_sequence::*;
+    ///
+    /// let empty_sequence = DigitSequence::new();
+    /// assert!(empty_sequence.is_empty());
+    ///
+    /// let non_empty_sequence: DigitSequence = 84u8.into();
+    /// assert!(!non_empty_sequence.is_empty());
+    /// ```
+    pub fn is_empty(&self) -> bool {
+        self.0.is_empty()
+    }
 }
 
 impl TryFrom<&[u8]> for DigitSequence {
