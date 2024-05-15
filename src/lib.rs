@@ -8,10 +8,13 @@
 //!
 //! * optional `serde` I/O
 
+mod arrays;
 mod digit_sequence;
 mod integers;
 mod result;
+mod slices;
 mod strings;
+mod vecs;
 
-pub use digit_sequence::DigitSequence;
+pub use digit_sequence::*;
 pub use result::*;

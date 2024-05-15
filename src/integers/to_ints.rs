@@ -193,6 +193,5 @@ mod tests {
                 test_case_failure(format!("1{}", "0".repeat(100)).as_str());
             }
         }
-
     }
 }

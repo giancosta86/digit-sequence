@@ -1,4 +1,3 @@
-use crate::{CrateError, CrateResult};
 use std::fmt::Display;
 
 /// Immutable sequence of u8 digits.
@@ -65,7 +64,7 @@ use std::fmt::Display;
 ///   # }
 ///   ```
 ///
-/// * to any **unsigned** number - which can fail with [CrateError::Overflow]:
+/// * to any **unsigned** number - which can fail with [crate::CrateError::Overflow]:
 ///
 ///   ```
 ///   use digit_sequence::{CrateResult, CrateError, DigitSequence};
@@ -181,11 +180,7 @@ use std::fmt::Display;
 /// When the `serde` feature is enabled for this crate, [Self] implements the `serde::Serialize` and `serde::Deserialize` traits.
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct DigitSequence(Vec<u8>);
-
-pub fn internal_create_digit_sequence(digits: Vec<u8>) -> DigitSequence {
-    DigitSequence(digits)
-}
+pub struct DigitSequence(pub(crate) Vec<u8>);
 
 impl DigitSequence {
     /// Creates an empty DigitSequence
@@ -222,40 +217,6 @@ impl DigitSequence {
     }
 }
 
-impl TryFrom<&[u8]> for DigitSequence {
-    type Error = CrateError;
-
-    fn try_from(digits: &[u8]) -> CrateResult<Self> {
-        let mut digits_vec = Vec::new();
-
-        for &digit in digits.iter() {
-            if digit >= 10 {
-                return Err(CrateError::NonDigitNumber(digit as u128));
-            }
-
-            digits_vec.push(digit);
-        }
-
-        Ok(DigitSequence(digits_vec))
-    }
-}
-
-impl<const N: usize> TryFrom<&[u8; N]> for DigitSequence {
-    type Error = CrateError;
-
-    fn try_from(digits: &[u8; N]) -> CrateResult<Self> {
-        Self::try_from(digits as &[u8])
-    }
-}
-
-impl TryFrom<&Vec<u8>> for DigitSequence {
-    type Error = CrateError;
-
-    fn try_from(value: &Vec<u8>) -> CrateResult<Self> {
-        Self::try_from(value as &[u8])
-    }
-}
-
 impl Display for DigitSequence {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         for digit in &self.0 {
@@ -263,30 +224,6 @@ impl Display for DigitSequence {
         }
 
         Ok(())
-    }
-}
-
-impl<const N: usize> PartialEq<[u8; N]> for DigitSequence {
-    fn eq(&self, other: &[u8; N]) -> bool {
-        self.0 == *other
-    }
-}
-
-impl PartialEq<&[u8]> for DigitSequence {
-    fn eq(&self, other: &&[u8]) -> bool {
-        self.0 == *other
-    }
-}
-
-impl<const N: usize> PartialEq<&[u8; N]> for DigitSequence {
-    fn eq(&self, other: &&[u8; N]) -> bool {
-        self.0 == *other
-    }
-}
-
-impl PartialEq<Vec<u8>> for DigitSequence {
-    fn eq(&self, other: &Vec<u8>) -> bool {
-        self.0 == *other
     }
 }
 
@@ -353,7 +290,7 @@ mod tests {
                     it "should return Err" {
                         let result = DigitSequence::try_from(&[9, 3, 18]);
 
-                        eq!(result, Err(CrateError::NonDigitNumber(18)));
+                        eq!(result, Err(crate::CrateError::NonDigitNumber(18)));
                     }
                 }
 

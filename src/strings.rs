@@ -1,4 +1,3 @@
-use crate::digit_sequence::internal_create_digit_sequence;
 use crate::{CrateError, CrateResult, DigitSequence};
 use std::str::FromStr;
 
@@ -15,7 +14,7 @@ impl FromStr for DigitSequence {
             }
         }
 
-        Ok(internal_create_digit_sequence(digits))
+        Ok(DigitSequence(digits))
     }
 }
 

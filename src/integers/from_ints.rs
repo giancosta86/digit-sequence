@@ -1,4 +1,3 @@
-use crate::digit_sequence::internal_create_digit_sequence;
 use crate::{CrateError, CrateResult, DigitSequence};
 
 macro_rules! impl_try_from_signed {
@@ -46,7 +45,7 @@ macro_rules! convert_from_positive {
 
         let digits: Vec<u8> = reversed_digits.into_iter().rev().collect();
 
-        internal_create_digit_sequence(digits)
+        DigitSequence(digits)
     }};
 }
 
