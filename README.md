@@ -3,8 +3,9 @@
 _Sequence of u8 digits_
 
 [![CI](https://github.com/giancosta86/digit-sequence/actions/workflows/publish-to-crates.yml/badge.svg)](https://github.com/giancosta86/digit-sequence/actions/workflows/publish-to-crates.yml)
+![Crates.io Version](https://img.shields.io/crates/v/digit_sequence?style=flat&logo=rust)
 
-This Rust crate revolves around `DigitSequence`, a sequence of 0-9 `u8` digits, with:
+This Rust crate revolves around the `DigitSequence` struct, a sequence of 0-9 `u8` digits, with:
 
 - conversions from integers, numeric sequences and strings
 
@@ -14,17 +15,11 @@ This Rust crate revolves around `DigitSequence`, a sequence of 0-9 `u8` digits, 
 
 - optional `serde` I/O
 
-## Optional features
+## Features
 
-### serde
+This crate supports the following _optional_ features:
 
-To enable I/O via `serde`:
-
-```toml
-[dependencies.digit-sequence]
-version = "*"
-features = ["serde"]
-```
+- `serde`: enables JSON conversions via [serde](https://crates.io/crates/serde)
 
 ## Crates.io
 
