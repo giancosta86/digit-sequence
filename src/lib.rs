@@ -147,35 +147,6 @@ impl DigitSequence {
         DigitSequence(vec![])
     }
 
-    /// Repeatable iteration over references to the digits.
-    ///
-    /// ```
-    /// use digit_sequence::*;
-    ///
-    /// # fn main() -> GenericResult<()> {
-    /// let source = [9, 5, 0, 2];
-    /// let sequence: DigitSequence = (&source).try_into()?;
-    /// let mut target: Vec<u8> = vec![];
-    ///
-    /// for &digit in sequence.iter() {
-    ///     target.push(digit)
-    /// }
-    ///
-    /// for &digit in sequence.iter() {
-    ///     target.push(digit)
-    /// }
-    ///
-    /// let expected_vec: Vec<u8> = [&source[..], &source[..]].concat();
-    ///
-    /// assert_eq!(target, expected_vec);
-    ///
-    /// # Ok(())
-    /// # }
-    /// ```
-    pub fn iter(&self) -> std::slice::Iter<u8> {
-        self.0.iter()
-    }
-
     /// Tells whether the sequence is empty.
     ///
     /// ```
