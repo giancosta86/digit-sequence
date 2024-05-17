@@ -1,6 +1,81 @@
 use crate::{CrateError, CrateResult, DigitSequence};
-use std::str::FromStr;
+use std::{fmt::Display, str::FromStr};
 
+/// The string representation of a [DigitSequence] is just the concatenation of its digits.
+///
+/// ```
+/// use digit_sequence::*;
+///
+/// let mut digit_sequence: DigitSequence;
+///
+/// digit_sequence = DigitSequence::new();
+/// assert_eq!(digit_sequence.to_string(), "");
+///
+/// digit_sequence = 9u8.into();
+/// assert_eq!(digit_sequence.to_string(), "9");
+///
+/// digit_sequence = 175438u32.into();
+/// assert_eq!(digit_sequence.to_string(), "175438");
+/// ```
+impl Display for DigitSequence {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        for &digit in &self.0 {
+            write!(f, "{}", digit)?;
+        }
+
+        Ok(())
+    }
+}
+
+/// Parsing a &[str] or [String] works if it only consists of base-10 digits,
+/// with the exception of the empty string:
+///
+/// ```
+/// use digit_sequence::*;
+///
+/// # fn main() -> GenericResult<()> {
+/// let mut sequence: DigitSequence;
+///
+/// sequence = "".parse()?;
+/// assert_eq!(sequence, []);
+///
+/// sequence = "2".parse()?;
+/// assert_eq!(sequence, [2]);
+///
+/// sequence = "0302".parse()?;
+/// assert_eq!(sequence, [0, 3, 0, 2]);
+///
+/// sequence = String::from("0302").parse()?;
+/// assert_eq!(sequence, [0, 3, 0, 2]);
+///
+/// # Ok(())
+/// # }
+/// ```
+///
+/// Any other string pattern results in a [CrateError::NonDigitChar]:
+///
+/// ```
+/// use digit_sequence::*;
+///
+/// # fn main() -> GenericResult<()> {
+///
+/// let mut result: CrateResult<DigitSequence>;
+///
+/// result = "<NOT A NUMBER>".parse();
+/// assert!(result == Err(CrateError::NonDigitChar('<')));
+///
+/// result = "90xy".parse();
+/// assert!(result == Err(CrateError::NonDigitChar('x')));
+///
+/// result = "-90".parse();
+/// assert!(result == Err(CrateError::NonDigitChar('-')));
+///
+/// result = " 90".parse();
+/// assert!(result == Err(CrateError::NonDigitChar(' ')));
+///  
+/// # Ok(())
+/// # }
+/// ```
 impl FromStr for DigitSequence {
     type Err = CrateError;
 
@@ -15,82 +90,5 @@ impl FromStr for DigitSequence {
         }
 
         Ok(DigitSequence(digits))
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use pretty_assertions::assert_eq as eq;
-    use speculate2::*;
-
-    speculate! {
-        describe "Converting &str to DigitSequence" {
-            fn test_ok(source: &str, expected: &[u8]) {
-                let digit_sequence: DigitSequence = source.parse().unwrap();
-
-                eq!(digit_sequence, expected);
-            }
-
-            fn test_err(source: &str, expected_error: CrateError) {
-                let result: CrateResult<DigitSequence> = source.parse();
-
-                eq!(result, Err(expected_error));
-            }
-
-            describe "when passing an empty string" {
-                it "should create an empty sequence" {
-                    test_ok("", &[])
-                }
-            }
-
-            describe "when passing '0'" {
-                it "should work" {
-                    test_ok("0", &[0]);
-                }
-            }
-
-            describe "when passing '92'" {
-                it "should work" {
-                    test_ok("92", &[9, 2]);
-                }
-            }
-
-            describe "when passing '304'" {
-                it "should work" {
-                    test_ok("304", &[3, 0, 4]);
-                }
-            }
-
-            describe "when passing 340" {
-                it "should work" {
-                    test_ok("340", &[3, 4, 0]);
-                }
-            }
-
-            describe "when passing 034" {
-                it "should work" {
-                    test_ok("034", &[0, 3, 4]);
-                }
-            }
-
-            describe "when passing a negative number string" {
-                it "should return Err" {
-                    test_err("-89", CrateError::NonDigitChar('-'));
-                }
-            }
-
-            describe "when passing a non-number string" {
-                it "should return Err" {
-                    test_err("<NOT A NUMBER>", CrateError::NonDigitChar('<'));
-                }
-            }
-
-            describe "when passing a partially valid string" {
-                it "should return Err" {
-                    test_err("90xyz", CrateError::NonDigitChar('x'));
-                }
-            }
-        }
     }
 }

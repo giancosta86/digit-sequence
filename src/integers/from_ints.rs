@@ -1,7 +1,11 @@
 use crate::{CrateError, CrateResult, DigitSequence};
+use std::collections::LinkedList;
 
 macro_rules! impl_try_from_signed {
     ($type: ty) => {
+        /// Conversion from a *signed* integer to a [DigitSequence]
+        /// is fallible - in particular, *negative* values
+        /// result in [CrateError::NegativeNumber].
         impl TryFrom<$type> for DigitSequence {
             type Error = CrateError;
 
@@ -18,6 +22,8 @@ macro_rules! impl_try_from_signed {
 
 macro_rules! impl_from_unsigned {
     ($type: ty) => {
+        /// Conversion from an *unsigned* integer to a [DigitSequence]
+        /// is always infallible.
         impl From<$type> for DigitSequence {
             fn from(value: $type) -> DigitSequence {
                 convert_from_positive!(value)
@@ -28,13 +34,13 @@ macro_rules! impl_from_unsigned {
 
 macro_rules! convert_from_positive {
     ($value: ident) => {{
-        let mut reversed_digits = Vec::new();
+        let mut result = LinkedList::new();
         let mut current_value = $value;
 
         loop {
             let digit = current_value % 10;
 
-            reversed_digits.push(digit as u8);
+            result.push_front(digit as u8);
 
             current_value /= 10;
 
@@ -43,9 +49,7 @@ macro_rules! convert_from_positive {
             }
         }
 
-        let digits: Vec<u8> = reversed_digits.into_iter().rev().collect();
-
-        DigitSequence(digits)
+        DigitSequence(result.into_iter().collect())
     }};
 }
 

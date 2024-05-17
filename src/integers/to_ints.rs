@@ -1,22 +1,32 @@
-use crate::{digit_sequence::DigitSequence, CrateError, CrateResult};
+use crate::{CrateError, CrateResult, DigitSequence};
 
 macro_rules! impl_try_to_unsigned {
     ($type: ty) => {
+        /// Conversion from a [DigitSequence] is only available to
+        /// *unsigned* integers.
+        ///
+        /// It is always fallible - because
+        /// it might result in a [CrateError::Overflow].
         impl TryFrom<DigitSequence> for $type {
             type Error = CrateError;
 
-            fn try_from(value: DigitSequence) -> CrateResult<Self> {
-                Self::try_from(&value)
+            fn try_from(sequence: DigitSequence) -> CrateResult<Self> {
+                (&sequence).try_into()
             }
         }
 
+        /// Conversion from a &[DigitSequence] is only available to
+        /// *unsigned* integers.
+        ///
+        /// It is always fallible - because
+        /// it might result in a [CrateError::Overflow].
         impl TryFrom<&DigitSequence> for $type {
             type Error = CrateError;
 
-            fn try_from(value: &DigitSequence) -> CrateResult<Self> {
+            fn try_from(sequence: &DigitSequence) -> CrateResult<Self> {
                 let mut result = 0 as Self;
 
-                let enumerated_increasing_digits = value.iter().rev().enumerate();
+                let enumerated_increasing_digits = sequence.iter().rev().enumerate();
 
                 for (index, &digit) in enumerated_increasing_digits {
                     let power_of_ten: u32 = index.try_into().or(Err(CrateError::Overflow))?;
@@ -50,147 +60,115 @@ impl_try_to_unsigned!(usize);
 #[cfg(test)]
 mod tests {
     use super::*;
-    use core::fmt::Debug;
+    use crate::test_utils::*;
     use pretty_assertions::assert_eq as eq;
     use speculate2::*;
 
     speculate! {
         describe "Converting a digit sequence to an integer" {
-            fn test_case_ok<E, T>(source: T)
-            where
-                E: Debug,
-                T: Into<DigitSequence>
-                    + TryFrom<DigitSequence, Error = E>
-                    + PartialEq<T>
-                    + Debug
-                    + Copy,
-            {
-                let sequence: DigitSequence = source.into();
-                let roundtrip: T = sequence.try_into().unwrap();
-
-                eq!(roundtrip, source);
-            }
-
-            fn test_case_failure(source: &str) {
+            fn test_case_overflow_u128(source: &str) {
                 let sequence: DigitSequence = source.parse().unwrap();
                 let conversion_result: CrateResult<u128> = sequence.try_into();
 
-                eq!(conversion_result.unwrap_err(), CrateError::Overflow);
+                eq!(conversion_result, Err(CrateError::Overflow));
             }
 
-            it "should convert to u8" {
-                test_case_ok(90u8);
+            it "should convert to/from u8" {
+                test_roundtrip_conversion(90u8);
             }
 
-            it "should convert to u16" {
-                test_case_ok(90u16);
+            it "should convert to/from u16" {
+                test_roundtrip_conversion(90u16);
             }
 
-            it "should convert to u32" {
-                test_case_ok(90u32);
+            it "should convert to/from u32" {
+                test_roundtrip_conversion(90u32);
             }
 
-            it "should convert to u64" {
-                test_case_ok(90u64);
+            it "should convert to/from u64" {
+                test_roundtrip_conversion(90u64);
             }
 
-            it "should convert to u128" {
-                test_case_ok(90u128);
+            it "should convert to/from u128" {
+                test_roundtrip_conversion(90u128);
             }
 
-            it "should convert to usize" {
-                test_case_ok(90usize);
+            it "should convert to/from usize" {
+                test_roundtrip_conversion(90usize);
             }
 
             it "should convert 0" {
-                test_case_ok(0u8);
+                test_roundtrip_conversion(0u8);
             }
 
             it "should convert u128::MAX" {
-                test_case_ok(u128::MAX);
+                test_roundtrip_conversion(u128::MAX);
             }
 
             it "should NOT convert u128::MAX + 1" {
-                test_case_failure("340282366920938463463374607431768211456");
+                test_case_overflow_u128("340282366920938463463374607431768211456");
             }
 
             it "should NOT convert a huge sequence of 1" {
-                test_case_failure("1".repeat(100).as_str());
+                test_case_overflow_u128("1".repeat(100).as_str());
+            }
+
+            it "should NOT convert a 1 of huge magnitude" {
+                test_case_overflow_u128(&format!("1{}", "0".repeat(100)));
             }
         }
 
         describe "Converting a reference to digit sequence to an integer" {
-            it "should work" {
-                let source = 90u8;
-
-                let sequence: DigitSequence = source.into();
-
-                let roundtrip: u8 = (&sequence).try_into().unwrap();
-
-                eq!(roundtrip, source);
-
-            }
-
-            macro_rules! test_case_ok(
-                ($source: expr, $type: ty) => {
-                    let sequence: DigitSequence = $source.into();
-                    let reference = &sequence;
-                    let roundtrip: $type = reference.try_into().unwrap();
-
-                    eq!(roundtrip, $source);
-                }
-            );
-
-            fn test_case_failure(source: &str) {
+            fn test_case_overflow_u128_via_ref(source: &str) {
                 let sequence: DigitSequence = source.parse().unwrap();
                 let reference = &sequence;
                 let conversion_result: CrateResult<u128> = reference.try_into();
 
-                eq!(conversion_result.unwrap_err(), CrateError::Overflow);
+                eq!(conversion_result, Err(CrateError::Overflow));
             }
 
             it "should convert to u8" {
-                test_case_ok!(90u8, u8);
+                test_roundtrip_conversion_via_ref(90u8);
             }
 
             it "should convert to u16" {
-                test_case_ok!(90u16, u16);
+                test_roundtrip_conversion_via_ref(90u16);
             }
 
             it "should convert to u32" {
-                test_case_ok!(90u32, u32);
+                test_roundtrip_conversion_via_ref(90u32);
             }
 
             it "should convert to u64" {
-                test_case_ok!(90u64, u64);
+                test_roundtrip_conversion_via_ref(90u64);
             }
 
             it "should convert to u128" {
-                test_case_ok!(90u128, u128);
+                test_roundtrip_conversion_via_ref(90u128);
             }
 
             it "should convert to usize" {
-                test_case_ok!(90usize, usize);
+                test_roundtrip_conversion_via_ref(90usize);
             }
 
             it "should convert 0" {
-                test_case_ok!(0u8, u8);
+                test_roundtrip_conversion_via_ref(0u8);
             }
 
             it "should convert u128::MAX" {
-                test_case_ok!(u128::MAX, u128);
+                test_roundtrip_conversion_via_ref(u128::MAX);
             }
 
             it "should NOT convert u128::MAX + 1" {
-                test_case_failure("340282366920938463463374607431768211456");
+                test_case_overflow_u128_via_ref("340282366920938463463374607431768211456");
             }
 
             it "should NOT convert a huge sequence of 1" {
-                test_case_failure("1".repeat(100).as_str());
+                test_case_overflow_u128_via_ref(&"1".repeat(100));
             }
 
             it "should NOT convert a 1 of huge magnitude" {
-                test_case_failure(format!("1{}", "0".repeat(100)).as_str());
+                test_case_overflow_u128_via_ref(&format!("1{}", "0".repeat(100)));
             }
         }
     }
