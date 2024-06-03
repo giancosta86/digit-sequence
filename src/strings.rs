@@ -6,15 +6,13 @@ use std::{fmt::Display, str::FromStr};
 /// ```
 /// use digit_sequence::*;
 ///
-/// let mut digit_sequence: DigitSequence;
-///
-/// digit_sequence = DigitSequence::new();
+/// let digit_sequence: DigitSequence = DigitSequence::new();
 /// assert_eq!(digit_sequence.to_string(), "");
 ///
-/// digit_sequence = 9u8.into();
+/// let digit_sequence: DigitSequence = 9u8.into();
 /// assert_eq!(digit_sequence.to_string(), "9");
 ///
-/// digit_sequence = 175438u32.into();
+/// let digit_sequence: DigitSequence = 175438u32.into();
 /// assert_eq!(digit_sequence.to_string(), "175438");
 /// ```
 impl Display for DigitSequence {
@@ -34,18 +32,17 @@ impl Display for DigitSequence {
 /// use digit_sequence::*;
 ///
 /// # fn main() -> GenericResult<()> {
-/// let mut sequence: DigitSequence;
 ///
-/// sequence = "".parse()?;
+/// let sequence: DigitSequence = "".parse()?;
 /// assert_eq!(sequence, []);
 ///
-/// sequence = "2".parse()?;
+/// let sequence: DigitSequence = "2".parse()?;
 /// assert_eq!(sequence, [2]);
 ///
-/// sequence = "0302".parse()?;
+/// let sequence: DigitSequence = "0302".parse()?;
 /// assert_eq!(sequence, [0, 3, 0, 2]);
 ///
-/// sequence = String::from("0302").parse()?;
+/// let sequence: DigitSequence = String::from("0302").parse()?;
 /// assert_eq!(sequence, [0, 3, 0, 2]);
 ///
 /// # Ok(())
@@ -59,18 +56,16 @@ impl Display for DigitSequence {
 ///
 /// # fn main() -> GenericResult<()> {
 ///
-/// let mut result: CrateResult<DigitSequence>;
-///
-/// result = "<NOT A NUMBER>".parse();
+/// let result: CrateResult<DigitSequence> = "<NOT A NUMBER>".parse();
 /// assert!(result == Err(CrateError::NonDigitChar('<')));
 ///
-/// result = "90xy".parse();
+/// let result: CrateResult<DigitSequence> = "90xy".parse();
 /// assert!(result == Err(CrateError::NonDigitChar('x')));
 ///
-/// result = "-90".parse();
+/// let result: CrateResult<DigitSequence> = "-90".parse();
 /// assert!(result == Err(CrateError::NonDigitChar('-')));
 ///
-/// result = " 90".parse();
+/// let result: CrateResult<DigitSequence> = " 90".parse();
 /// assert!(result == Err(CrateError::NonDigitChar(' ')));
 ///  
 /// # Ok(())

@@ -48,6 +48,7 @@ pub use result::*;
 /// assert_eq!(sequence, [3, 8, 7]);
 ///
 /// assert_eq!(format!("{:?}", sequence), "DigitSequence([3, 8, 7])");
+/// assert_eq!(sequence.to_string(), "387");
 ///
 /// # Ok(())
 /// # }

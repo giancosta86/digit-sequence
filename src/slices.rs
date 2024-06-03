@@ -8,19 +8,17 @@ use crate::{CrateError, CrateResult, DigitSequence};
 /// use digit_sequence::*;
 ///
 /// # fn main() -> GenericResult<()> {
-/// let mut sequence: DigitSequence;
-/// let mut slice: &[u8];
 ///
-/// slice = &[];
-/// sequence = slice.try_into()?;
+/// let slice: &[u8] = &[];
+/// let sequence: DigitSequence = slice.try_into()?;
 /// assert_eq!(sequence, []);
 ///
-/// slice = &[9];
-/// sequence = slice.try_into()?;
+/// let slice: &[u8] = &[9];
+/// let sequence: DigitSequence = slice.try_into()?;
 /// assert_eq!(sequence, [9]);
 ///
-/// slice = &[0, 5, 6, 9, 0];
-/// sequence = slice.try_into()?;
+/// let slice: &[u8] = &[0, 5, 6, 9, 0];
+/// let sequence: DigitSequence = slice.try_into()?;
 /// assert_eq!(sequence, [0, 5, 6, 9, 0]);
 ///
 /// # Ok(())

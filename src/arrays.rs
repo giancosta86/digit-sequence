@@ -8,12 +8,11 @@ use crate::{CrateError, CrateResult, DigitSequence};
 /// use digit_sequence::*;
 ///
 /// # fn main() -> GenericResult<()> {
-/// let mut sequence: DigitSequence;
 ///
-/// sequence = [].try_into()?;
+/// let sequence: DigitSequence = [].try_into()?;
 /// assert_eq!(sequence, []);
 ///
-/// sequence = [9, 2].try_into()?;
+/// let sequence: DigitSequence = [9, 2].try_into()?;
 /// assert_eq!(sequence, [9, 2]);
 ///
 /// let result: CrateResult<DigitSequence> = [10].try_into();
@@ -39,12 +38,11 @@ impl<const N: usize> TryFrom<[u8; N]> for DigitSequence {
 /// use digit_sequence::*;
 ///
 /// # fn main() -> GenericResult<()> {
-/// let mut sequence: DigitSequence;
 ///
-/// sequence = (&[]).try_into()?;
+/// let sequence: DigitSequence = (&[]).try_into()?;
 /// assert_eq!(sequence, []);
 ///
-/// sequence = (&[9, 2]).try_into()?;
+/// let sequence: DigitSequence = (&[9, 2]).try_into()?;
 /// assert_eq!(sequence, [9, 2]);
 ///
 /// let result: CrateResult<DigitSequence> = [10].try_into();
