@@ -1,0 +1,17 @@
+name: Publish to crates.io
+
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: giancosta86/aurora-github/actions/rust-crate@crates
+        with:
+          cargo-token: ${{ secrets.CARGO_TOKEN }}
