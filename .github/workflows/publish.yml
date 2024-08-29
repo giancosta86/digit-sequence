@@ -1,9 +1,9 @@
-name: Publish to crates.io
+name: Publish crate
 
 on:
-  push:
-    tags:
-      - v*
+  pull_request:
+    types: closed
+    branches: main
 
 jobs:
   build:
@@ -12,6 +12,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: giancosta86/aurora-github/actions/rust-crate@crates
-        with:
-          cargo-token: ${{ secrets.CARGO_TOKEN }}
+      #- uses: giancosta86/aurora-github/actions/rust-crate@crates
+      #  with:
+      #    cargo-token: ${{ secrets.CARGO_TOKEN }}
