@@ -15,3 +15,5 @@ jobs:
       #- uses: giancosta86/aurora-github/actions/validate-rust-crate@crates
 
       - uses: giancosta86/aurora-github/actions/tag-and-release@crates
+        with:
+          draft: true
