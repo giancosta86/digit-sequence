@@ -1,9 +1,6 @@
 name: Validate crate
 
-on:
-  pull_request:
-    types: [opened, reopened, edited, synchronize]
-    branches: main
+on: workflow_dispatch
 
 jobs:
   validate:
