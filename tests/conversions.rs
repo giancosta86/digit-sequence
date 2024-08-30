@@ -8,7 +8,7 @@ speculate! {
             it "should work" {
                 let sequence: DigitSequence = 9081u16.into();
 
-                eq!(sequence, [9, 0, 8, 1]);
+                eq!(sequence, [9, 0, 8, 8]);
             }
         }
 
