@@ -5,7 +5,7 @@ on:
     types: [opened, reopened, synchronize]
     branches: main
 
-  workflow_dispatch:
+  workflow_dispatch: _
 
 jobs:
   validate:
@@ -14,13 +14,4 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      ##- uses: giancosta86/aurora-github/actions/validate-rust-crate@v2
-
-      - id: detector
-        uses: giancosta86/aurora-github/actions/get-branch-version@b2.0.0
-
-      - run: |
-          branch="${{ steps.detector.outputs.branch }}"
-          version="${{ steps.detector.outputs.version }}"
-
-          echo "Detected version '$version' from branch '$branch'"
+      - uses: giancosta86/aurora-github/actions/validate-rust-crate@b2.0.0
