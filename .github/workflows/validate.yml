@@ -14,12 +14,11 @@ jobs:
 
       #- uses: giancosta86/aurora-github/actions/validate-rust-crate@v2
 
-      - name: Branch and version detection
-        id: detector
+      - id: detector
         uses: giancosta86/aurora-github/actions/get-branch-version@v2
 
       - run: |
-          branch="${{ detector.outputs.branch }}"
-          version="${{ detector.outputs.version }}"
+          branch="${{ steps.detector.outputs.branch }}"
+          version="${{ steps.detector.outputs.version }}"
 
           echo "Detected version '${version}' from branch '${branch}'"
