@@ -21,4 +21,4 @@ jobs:
           branch="${{ steps.detector.outputs.branch }}"
           version="${{ steps.detector.outputs.version }}"
 
-          echo "Detected version '${version}' from branch '${branch}'"
+          echo "Detected version '$version' from branch '$branch'"
