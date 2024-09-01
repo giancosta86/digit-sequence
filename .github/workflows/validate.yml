@@ -12,8 +12,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      #- uses: giancosta86/aurora-github/actions/validate-rust-crate@crates
+      #- uses: giancosta86/aurora-github/actions/validate-rust-crate@v2
 
-      - uses: giancosta86/aurora-github/actions/tag-and-release@crates
-        with:
-          draft-only: true
+      - uses: giancosta86/aurora-github/actions/get-branch-version@v2
+        id: detector
+
+      - run: |
+          branch="${{ detector.outputs.branch }}"
+          version="${{ detector.outputs.version }}"
+
+          echo "Detected version '${version}' from branch '${branch}'"
