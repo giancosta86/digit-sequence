@@ -16,4 +16,4 @@ jobs:
 
       - uses: giancosta86/aurora-github/actions/tag-and-release@crates
         with:
-          draft: true
+          draft-only: true
