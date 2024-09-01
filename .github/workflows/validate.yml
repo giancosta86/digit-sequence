@@ -5,7 +5,7 @@ on:
     types: [opened, reopened, synchronize]
     branches: main
 
-  workflow_dispatch: _
+  workflow_dispatch:
 
 jobs:
   validate:
