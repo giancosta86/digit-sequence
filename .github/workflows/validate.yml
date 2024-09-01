@@ -14,8 +14,9 @@ jobs:
 
       #- uses: giancosta86/aurora-github/actions/validate-rust-crate@v2
 
-      - uses: giancosta86/aurora-github/actions/get-branch-version@v2
+      - name: Branch and version detection
         id: detector
+        uses: giancosta86/aurora-github/actions/get-branch-version@v2
 
       - run: |
           branch="${{ detector.outputs.branch }}"
