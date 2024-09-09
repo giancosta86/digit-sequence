@@ -1,4 +1,4 @@
-name: Publish artifact
+name: Publish crate
 
 on:
   pull_request:
