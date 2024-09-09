@@ -19,7 +19,3 @@ jobs:
           artifact-descriptor: Cargo.toml
 
       - uses: giancosta86/aurora-github/actions/verify-rust-crate@v2
-
-      - uses: giancosta86/aurora-github/actions/publish-rust-crate@v2
-        with:
-          dry-run: true
