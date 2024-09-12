@@ -61,115 +61,130 @@ impl_try_to_unsigned!(usize);
 mod tests {
     use super::*;
     use crate::test_utils::*;
-    use pretty_assertions::assert_eq as eq;
-    use speculate2::*;
+    use pretty_assertions::assert_eq;
 
-    speculate! {
-        describe "Converting a digit sequence to an integer" {
-            fn test_case_overflow_u128(source: &str) {
-                let sequence: DigitSequence = source.parse().unwrap();
-                let conversion_result: CrateResult<u128> = sequence.try_into();
+    #[test]
+    fn roundtrip_convert_0() {
+        expect_try_roundtrip_conversion(0u8);
+    }
 
-                eq!(conversion_result, Err(CrateError::Overflow));
-            }
+    #[test]
+    fn roundtrip_convert_u8() {
+        expect_try_roundtrip_conversion(90u8);
+    }
 
-            it "should convert to/from u8" {
-                test_roundtrip_conversion(90u8);
-            }
+    #[test]
+    fn roundtrip_convert_u16() {
+        expect_try_roundtrip_conversion(90u16);
+    }
 
-            it "should convert to/from u16" {
-                test_roundtrip_conversion(90u16);
-            }
+    #[test]
+    fn roundtrip_convert_u32() {
+        expect_try_roundtrip_conversion(90u32);
+    }
 
-            it "should convert to/from u32" {
-                test_roundtrip_conversion(90u32);
-            }
+    #[test]
+    fn roundtrip_convert_u64() {
+        expect_try_roundtrip_conversion(90u64);
+    }
 
-            it "should convert to/from u64" {
-                test_roundtrip_conversion(90u64);
-            }
+    #[test]
+    fn roundtrip_convert_u128() {
+        expect_try_roundtrip_conversion(90u128);
+    }
 
-            it "should convert to/from u128" {
-                test_roundtrip_conversion(90u128);
-            }
+    #[test]
+    fn roundtrip_convert_usize() {
+        expect_try_roundtrip_conversion(90usize);
+    }
 
-            it "should convert to/from usize" {
-                test_roundtrip_conversion(90usize);
-            }
+    #[test]
+    fn convert_u128_max() {
+        expect_try_roundtrip_conversion(u128::MAX);
+    }
 
-            it "should convert 0" {
-                test_roundtrip_conversion(0u8);
-            }
+    fn expect_unsigned_overflow(source: &str) {
+        let sequence: DigitSequence = source.parse().unwrap();
+        let conversion_result: CrateResult<u128> = sequence.try_into();
 
-            it "should convert u128::MAX" {
-                test_roundtrip_conversion(u128::MAX);
-            }
+        assert_eq!(conversion_result, Err(CrateError::Overflow));
+    }
 
-            it "should NOT convert u128::MAX + 1" {
-                test_case_overflow_u128("340282366920938463463374607431768211456");
-            }
+    #[test]
+    fn convert_u128_max_plus_one_to_u128() {
+        expect_unsigned_overflow("340282366920938463463374607431768211456");
+    }
 
-            it "should NOT convert a huge sequence of 1" {
-                test_case_overflow_u128("1".repeat(100).as_str());
-            }
+    #[test]
+    fn convert_huge_sequence_of_1s_to_u128() {
+        expect_unsigned_overflow("1".repeat(100).as_str());
+    }
 
-            it "should NOT convert a 1 of huge magnitude" {
-                test_case_overflow_u128(&format!("1{}", "0".repeat(100)));
-            }
-        }
+    #[test]
+    fn convert_a_1_of_huge_magnitude_to_u128() {
+        expect_unsigned_overflow(&format!("1{}", "0".repeat(100)));
+    }
 
-        describe "Converting a reference to digit sequence to an integer" {
-            fn test_case_overflow_u128_via_ref(source: &str) {
-                let sequence: DigitSequence = source.parse().unwrap();
-                let reference = &sequence;
-                let conversion_result: CrateResult<u128> = reference.try_into();
+    #[test]
+    fn roundtrip_convert_0_via_ref() {
+        expect_try_roundtrip_conversion_via_ref(0u8);
+    }
 
-                eq!(conversion_result, Err(CrateError::Overflow));
-            }
+    #[test]
+    fn roundtrip_convert_u8_via_ref() {
+        expect_try_roundtrip_conversion_via_ref(90u8);
+    }
 
-            it "should convert to u8" {
-                test_roundtrip_conversion_via_ref(90u8);
-            }
+    #[test]
+    fn roundtrip_convert_u16_via_ref() {
+        expect_try_roundtrip_conversion_via_ref(90u16);
+    }
 
-            it "should convert to u16" {
-                test_roundtrip_conversion_via_ref(90u16);
-            }
+    #[test]
+    fn roundtrip_convert_u32_via_ref() {
+        expect_try_roundtrip_conversion_via_ref(90u32);
+    }
 
-            it "should convert to u32" {
-                test_roundtrip_conversion_via_ref(90u32);
-            }
+    #[test]
+    fn roundtrip_convert_u64_via_ref() {
+        expect_try_roundtrip_conversion_via_ref(90u64);
+    }
 
-            it "should convert to u64" {
-                test_roundtrip_conversion_via_ref(90u64);
-            }
+    #[test]
+    fn roundtrip_convert_u128_via_ref() {
+        expect_try_roundtrip_conversion_via_ref(90u128);
+    }
 
-            it "should convert to u128" {
-                test_roundtrip_conversion_via_ref(90u128);
-            }
+    #[test]
+    fn roundtrip_convert_usize_via_ref() {
+        expect_try_roundtrip_conversion_via_ref(90usize);
+    }
 
-            it "should convert to usize" {
-                test_roundtrip_conversion_via_ref(90usize);
-            }
+    #[test]
+    fn convert_u128_max_via_ref() {
+        expect_try_roundtrip_conversion_via_ref(u128::MAX);
+    }
 
-            it "should convert 0" {
-                test_roundtrip_conversion_via_ref(0u8);
-            }
+    fn expect_unsigned_overflow_via_ref(source: &str) {
+        let sequence: DigitSequence = source.parse().unwrap();
+        let reference = &sequence;
+        let conversion_result: CrateResult<u128> = reference.try_into();
 
-            it "should convert u128::MAX" {
-                test_roundtrip_conversion_via_ref(u128::MAX);
-            }
+        assert_eq!(conversion_result, Err(CrateError::Overflow));
+    }
 
-            it "should NOT convert u128::MAX + 1" {
-                test_case_overflow_u128_via_ref("340282366920938463463374607431768211456");
-            }
+    #[test]
+    fn convert_u128_max_plus_one_to_u128_via_ref() {
+        expect_unsigned_overflow_via_ref("340282366920938463463374607431768211456");
+    }
 
-            it "should NOT convert a huge sequence of 1" {
-                test_case_overflow_u128_via_ref(&"1".repeat(100));
-            }
+    #[test]
+    fn convert_huge_sequence_of_1s_to_u128_via_ref() {
+        expect_unsigned_overflow_via_ref(&"1".repeat(100));
+    }
 
-            it "should NOT convert a 1 of huge magnitude" {
-                test_case_overflow_u128_via_ref(&format!("1{}", "0".repeat(100)));
-            }
-        }
+    #[test]
+    fn convert_a_1_of_huge_magnitude_to_u128_via_ref() {
+        expect_unsigned_overflow_via_ref(&format!("1{}", "0".repeat(100)));
     }
 }

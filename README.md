@@ -2,8 +2,7 @@
 
 _Sequence of u8 digits_
 
-[![Crates.io Version](https://img.shields.io/crates/v/digit-sequence?style=for-the-badge&logo=rust)
-](https://crates.io/crates/digit-sequence)
+[![Crates.io Version](https://img.shields.io/crates/v/digit-sequence?style=for-the-badge&logo=rust&color=%23005220)](https://crates.io/crates/digit-sequence)
 
 This Rust crate revolves around the `DigitSequence` struct, a sequence of 0-9 `u8` digits, with:
 

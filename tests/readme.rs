@@ -23,14 +23,7 @@ fn main() -> GenericResult<()> {
     Ok(())
 }
 
-// Test
-//
-use speculate2::*;
-
-speculate! {
-    describe "The source code in the README file" {
-        it "must compile and run" {
-            main().unwrap();
-        }
-    }
+#[test]
+fn run_code_snippet_from_readme_file() {
+    main().unwrap();
 }
