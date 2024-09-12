@@ -70,93 +70,80 @@ impl_from_unsigned!(usize);
 #[cfg(test)]
 mod tests {
     use super::*;
-    use core::fmt::Debug;
-    use pretty_assertions::assert_eq as eq;
-    use speculate2::*;
+    use crate::test_utils::{expect_digits_from, expect_try_digits_from};
+    use pretty_assertions::assert_eq;
 
-    speculate! {
-        describe "Converting an integer to a digit sequence" {
-            describe "when converting 0" {
-                it "should return a sequence having just 0" {
-                    let digit_sequence: DigitSequence = 0u8.into();
+    #[test]
+    fn convert_0() {
+        let digit_sequence: DigitSequence = 0u8.into();
 
-                    eq!(digit_sequence, [0]);
-                }
-            }
+        assert_eq!(digit_sequence, [0]);
+    }
 
-            describe "when converting a negative number" {
-                it "should return Err" {
-                    let result: CrateResult<DigitSequence> = (-4).try_into();
+    #[test]
+    fn convert_negative_number() {
+        let result: CrateResult<DigitSequence> = (-4).try_into();
 
-                    eq!(result, Err(CrateError::NegativeNumber(-4)));
-                }
-            }
+        assert_eq!(result, Err(CrateError::NegativeNumber(-4)));
+    }
 
-            describe "when converting an unsigned" {
-                fn test_case<T: Into<DigitSequence>>(source: T, expected_digits: &[u8]) {
-                    let actual_sequence: DigitSequence = source.into();
+    #[test]
+    fn convert_u8() {
+        expect_digits_from(107u8, &[1, 0, 7])
+    }
 
-                    eq!(actual_sequence, expected_digits);
-                }
+    #[test]
+    fn convert_u16() {
+        expect_digits_from(107u16, &[1, 0, 7])
+    }
 
-                it "should convert a u8" {
-                    test_case(107u8, &[1, 0, 7])
-                }
+    #[test]
+    fn convert_u32() {
+        expect_digits_from(107u32, &[1, 0, 7])
+    }
 
-                it "should convert a u16" {
-                    test_case(107u16, &[1, 0, 7])
-                }
+    #[test]
+    fn convert_u64() {
+        expect_digits_from(107u64, &[1, 0, 7])
+    }
 
-                it "should convert a u32" {
-                    test_case(107u32, &[1, 0, 7])
-                }
+    #[test]
+    fn convert_u128() {
+        expect_digits_from(107u128, &[1, 0, 7])
+    }
 
-                it "should convert a u64" {
-                    test_case(107u64, &[1, 0, 7])
-                }
+    #[test]
+    fn convert_usize() {
+        expect_digits_from(107usize, &[1, 0, 7])
+    }
 
-                it "should convert a u128" {
-                    test_case(107u128, &[1, 0, 7])
-                }
+    #[test]
+    fn convert_i8() {
+        expect_try_digits_from(107i8, &[1, 0, 7])
+    }
 
-                it "should convert a usize" {
-                    test_case(107usize, &[1, 0, 7])
-                }
-            }
+    #[test]
+    fn convert_i16() {
+        expect_try_digits_from(107i16, &[1, 0, 7])
+    }
 
+    #[test]
+    fn convert_i32() {
+        expect_try_digits_from(107i32, &[1, 0, 7])
+    }
 
-            describe "when converting a signed" {
-                fn test_case<T: TryInto<DigitSequence>>(source: T, expected_digits: &[u8])
-                where <T as TryInto<DigitSequence>>::Error: Debug {
-                    let actual_sequence: DigitSequence = source.try_into().unwrap();
+    #[test]
+    fn convert_i64() {
+        expect_try_digits_from(107i64, &[1, 0, 7])
+    }
 
-                    eq!(actual_sequence, expected_digits);
-                }
+    #[test]
+    fn convert_i128() {
+        expect_try_digits_from(107i128, &[1, 0, 7])
+    }
 
-                it "should convert a i8" {
-                    test_case(107i8, &[1, 0, 7])
-                }
-
-                it "should convert a i16" {
-                    test_case(107i16, &[1, 0, 7])
-                }
-
-                it "should convert a i32" {
-                    test_case(107i32, &[1, 0, 7])
-                }
-
-                it "should convert a i64" {
-                    test_case(107i64, &[1, 0, 7])
-                }
-
-                it "should convert a i128" {
-                    test_case(107i128, &[1, 0, 7])
-                }
-
-                it "should convert a isize" {
-                    test_case(107isize, &[1, 0, 7])
-                }
-            }
-        }
+    #[test]
+    fn convert_isize() {
+        expect_try_digits_from(107isize, &[1, 0, 7])
     }
 }
