@@ -26,7 +26,7 @@ impl DigitSequence {
     /// # Ok(())
     /// # }
     /// ```
-    pub fn iter(&self) -> std::slice::Iter<u8> {
+    pub fn iter(&self) -> std::slice::Iter<'_, u8> {
         self.0.iter()
     }
 }
